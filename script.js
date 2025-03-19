@@ -636,6 +636,7 @@ class LottoGame {
 
     showMessage(message) {
         const messageArea = document.getElementById('messageArea');
+        const mainContent = document.querySelector('.main-content');
 
         // 이전 메시지 타이머 모두 취소
         this.messageTimeouts.forEach(timeoutId => {
@@ -643,25 +644,52 @@ class LottoGame {
         });
         this.messageTimeouts = [];
 
-        // 메시지 내용 설정 및 표시
+        // 메시지 내용 설정
         messageArea.textContent = message;
+
+        // 메시지 위치 계산: main-content 높이에 따라 조정
+        const mainContentHeight = mainContent.clientHeight;
+
+        // 위치와 스케일 미리 설정
+        if (mainContentHeight > 1000) {
+            // 메인 컨텐츠가 1000px보다 크면 500px 위치에 고정
+            messageArea.style.top = '500px';
+            messageArea.style.transform = 'translateX(-50%) scale(0.9)';
+        } else {
+            // 메인 컨텐츠가 1000px보다 작으면 중앙에 배치
+            messageArea.style.top = '50%';
+            messageArea.style.transform = 'translate(-50%, -50%) scale(0.9)';
+        }
+
+        // 메시지 초기 상태 설정 (투명하게)
+        messageArea.style.opacity = '0';
+
+        // 메시지 표시
         messageArea.style.display = 'block';
 
-        // 메시지 표시 애니메이션
-        messageArea.style.opacity = '0';
-        messageArea.style.transform = 'translate(-50%, -50%) scale(0.9)';
-
-        // 애니메이션 시작 타이머 설정
+        // 애니메이션 시작 타이머 설정 (위치는 그대로 유지, 오직 불투명도만 변경)
         const showTimerId = setTimeout(() => {
             messageArea.style.opacity = '1';
-            messageArea.style.transform = 'translate(-50%, -50%) scale(1)';
+
+            // transform에서 scale만 조정
+            if (mainContentHeight > 1000) {
+                messageArea.style.transform = 'translateX(-50%) scale(1)';
+            } else {
+                messageArea.style.transform = 'translate(-50%, -50%) scale(1)';
+            }
         }, 10);
         this.messageTimeouts.push(showTimerId);
 
         // 메시지 숨기기 타이머 설정 (1초 후)
         const hideTimerId = setTimeout(() => {
             messageArea.style.opacity = '0';
-            messageArea.style.transform = 'translate(-50%, -50%) scale(0.9)';
+
+            // transform에서 scale만 조정
+            if (mainContentHeight > 1000) {
+                messageArea.style.transform = 'translateX(-50%) scale(0.9)';
+            } else {
+                messageArea.style.transform = 'translate(-50%, -50%) scale(0.9)';
+            }
 
             // 완전히 숨기기 타이머 설정
             const removeTimerId = setTimeout(() => {
