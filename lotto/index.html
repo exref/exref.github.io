@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="무료 로또번호 생성기로 행운의 번호를 뽑아보세요. 당첨 확률을 높이는 번호 조합과 과거 당첨 번호 분석 기능을 제공합니다.">
+    <meta name="keywords" content="로또, 로또번호, 로또번호생성기, 로또번호추천, 로또당첨번호, 로또번호조합, 무료로또">
+    <meta name="author" content="로또번호 생성기">
+    <meta name="google-site-verification" content="VERIFICATION_CODE_HERE" />
+    <meta name="naver-site-verification" content="NAVER_VERIFICATION_CODE_HERE" />
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="로또번호 자동생성기">
+    <meta property="og:description" content="무료 로또번호 생성기로 행운의 번호를 뽑아보세요. 당첨 확률을 높이는 번호 조합과 과거 당첨 번호 분석 기능을 제공합니다.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://exref.github.io/lotto/">
+    <meta property="og:image" content="https://exref.github.io/img/social/lotto-og.jpg">
+    <link rel="canonical" href="https://exref.github.io/lotto/">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <title>로또번호 자동생성기</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "로또번호 자동생성기",
+      "description": "무료 로또번호 생성기로 행운의 번호를 뽑아보세요. 당첨 확률을 높이는 번호 조합과 과거 당첨 번호 분석 기능을 제공합니다.",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "KRW"
+      },
+      "keywords": "로또, 로또번호, 로또번호생성기, 로또번호추천, 로또당첨번호",
+      "url": "https://exref.github.io/lotto/"
+    }
+    </script>
+</head>
+
+<body>
+    <!-- 메뉴바 -->
+    <header class="menu-bar">
+        <div class="menu-container">
+            <h1>로또번호 생성기</h1>
+            <button class="menu-button" id="menuButton" aria-label="메뉴 열기">
+                <span class="material-icons">menu</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="main-content" role="main">
+        <div class="lotto-container">
+            <div class="message-area" id="messageArea" aria-live="polite">숫자는 6개까지 선택 가능합니다</div>
+            <section class="lotto-paper" aria-label="로또 번호 선택 영역">
+                <header class="paper-header">
+                    <div class="game-id">Lotto</div>
+                </header>
+                <div class="numbers-grid" role="group" aria-label="로또 번호 선택 그리드">
+                    <!-- JavaScript로 1-45 숫자 생성 -->
+                </div>
+                <div class="selected-numbers" role="region" aria-label="선택된 로또 번호">
+                    <!-- 선택된 번호들이 여기에 표시됨 -->
+                </div>
+                <div class="match-result" id="matchResult" aria-live="polite" role="status">
+                    <!-- 일치하는 번호 결과가 여기에 표시됨 -->
+                </div>
+            </section>
+            <div class="controls" role="group" aria-label="로또 번호 제어">
+                <button id="generateBtn" class="generate-button" aria-label="번호 생성하기">번호생성</button>
+                <button id="resetBtn" class="reset-button" aria-label="선택 초기화">초기화</button>
+            </div>
+        </div>
+
+        <!-- 푸터 섹션 -->
+        <footer class="site-footer" role="contentinfo">
+            <div class="footer-content">
+                <p>&copy; <span id="currentYear">2024</span> ncount All rights reserved.</p>
+            </div>
+            <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
+        </footer>
+    </main>
+
+    <!-- 광고배너 -->
+    <div class="ad-banner">
+        <div class="ad-container">
+            <span></span>
+        </div>
+    </div>
+
+    <!-- 슬라이드 메뉴 -->
+    <nav class="slide-menu" id="slideMenu">
+        <div class="slide-menu-header">
+            <button class="close-menu" id="closeMenu" aria-label="메뉴 닫기">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        <div class="menu-items">
+            <a href="../lotto" class="menu-item active">
+                <span class="material-icons menu-icon">casino</span>
+                <span class="menu-text">로또번호생성기</span>
+            </a>
+            <a href="../smi2srt" class="menu-item">
+                <span class="material-icons menu-icon">subtitles</span>
+                <span class="menu-text">SMI to SRT</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- 메뉴 오버레이 -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- 외부 스크립트 -->
+    <script src="../script.js"></script>
+    <script src="../common.js"></script>
+    <script src="../history_win.js"></script>
+</body>
+
+</html>

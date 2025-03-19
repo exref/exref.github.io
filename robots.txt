@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /img/
+Disallow: /*.js$
+Disallow: /*.css$
+Disallow: /*.csv$
+
+# 사이트맵 위치
+Sitemap: https://exref.github.io/sitemap.xml 

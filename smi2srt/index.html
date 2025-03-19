@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SMI 자막 파일을 SRT 형식으로 변환해주는 무료 온라인 도구입니다. 다중 파일 변환 및 인코딩 설정을 지원하며 브라우저에서 바로 처리됩니다.">
+    <meta name="keywords" content="SMI to SRT, 자막 변환, SMI 변환, SRT 변환, 자막 파일, 온라인 변환기, 무료 자막 변환">
+    <meta name="author" content="SMI to SRT 변환기">
+    <meta name="google-site-verification" content="VERIFICATION_CODE_HERE" />
+    <meta name="naver-site-verification" content="NAVER_VERIFICATION_CODE_HERE" />
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="SMI to SRT">
+    <meta property="og:description" content="SMI 자막 파일을 SRT 형식으로 쉽게 변환하세요. 다중 파일 변환, 인코딩 설정 지원, 브라우저에서 즉시 처리됩니다.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://exref.github.io/smi2srt/">
+    <meta property="og:image" content="https://exref.github.io/img/social/smi2srt-og.jpg">
+    <link rel="canonical" href="https://exref.github.io/smi2srt/">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <title>SMI to SRT</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+    <!-- 먼저 공통 스타일을 로드 -->
+    <link rel="stylesheet" href="../styles.css">
+    <!-- 그 다음 SMI to SRT 전용 스타일을 로드 -->
+    <link rel="stylesheet" href="styles.css">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SMI to SRT",
+      "description": "SMI 자막 파일을 SRT 형식으로 변환해주는 무료 온라인 도구입니다. 다중 파일 변환 및 인코딩 설정을 지원합니다.",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "KRW"
+      },
+      "featureList": "다중 파일 변환, 인코딩 옵션, 개행 문자 변환 지원",
+      "url": "https://exref.github.io/smi2srt/"
+    }
+    </script>
+</head>
+
+<body>
+    <!-- 메뉴바 -->
+    <header class="menu-bar">
+        <div class="menu-container">
+            <h1>SMI to SRT</h1>
+            <button class="menu-button" id="menuButton" aria-label="메뉴 열기">
+                <span class="material-icons">menu</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="main-content" role="main">
+        <div class="smi2srt-content">
+            <section class="intro-section">
+                <p>드래그 앤 드롭으로 SMI 파일을 업로드하거나 업로드존을 클릭하세요. 변환된 SRT 파일은 자동으로 다운로드됩니다.</p>
+            </section>
+
+            <!-- 처리 상태 -->
+            <div class="process-status info" id="processStatus" aria-live="polite">
+                파일을 선택하세요.
+            </div>
+
+            <!-- 업로드 영역 -->
+            <section class="upload-container" aria-label="파일 업로드 영역">
+                <div class="upload-zone" id="uploadZone" tabindex="0" role="button" aria-label="SMI 파일 업로드 영역"
+                    onclick="document.getElementById('fileInput').click();">
+                    <div class="upload-icon">
+                        <span class="material-icons">cloud_upload</span>
+                    </div>
+                    <p class="upload-text">SMI 파일을 여기에 끌어다 놓으세요.</p>
+                    <p class="upload-subtext">또는 클릭하여 파일을 선택하세요. (복수 파일 가능)</p>
+                    <input type="file" id="fileInput" accept=".smi" multiple
+                        onchange="window.handleSMIFiles(this.files)">
+                </div>
+            </section>
+
+            <!-- 유의사항 -->
+            <aside class="notice">
+                <p>💡 변환 팁:</p>
+                <ul>
+                    <li>원본 인코딩과 상관없이 SRT 파일은 UTF-8로 인코딩됩니다.</li>
+                    <li>자막이 깨지면 다운로드 후 인코딩을 변경해 보세요.</li>
+                    <li>자막 변환 후 파일이 자동으로 다운로드 됩니다.</li>
+                    <li>모든 처리는 브라우저에서 수행되며, 어떤 내용도 서버에 전달되지 않습니다.</li>
+                    <li>다운로드 과정에서 보안경고가 발생하더라도 자막파일은 안전합니다.</li>
+                </ul>
+            </aside>
+        </div>
+
+        <!-- 푸터 섹션 -->
+        <footer class="site-footer" role="contentinfo">
+            <div class="footer-content">
+                <p>&copy; <span id="currentYear">2024</span> ncount All rights reserved.</p>
+            </div>
+            <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
+        </footer>
+    </main>
+
+    <!-- 광고배너 -->
+    <div class="ad-banner">
+        <div class="ad-container">
+            <span></span>
+        </div>
+    </div>
+
+    <!-- 슬라이드 메뉴 -->
+    <nav class="slide-menu" id="slideMenu">
+        <div class="slide-menu-header">
+            <button class="close-menu" id="closeMenu" aria-label="메뉴 닫기">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        <div class="menu-items">
+            <a href="../lotto" class="menu-item">
+                <span class="material-icons menu-icon">casino</span>
+                <span class="menu-text">로또번호생성기</span>
+            </a>
+            <a href="../smi2srt" class="menu-item active">
+                <span class="material-icons menu-icon">subtitles</span>
+                <span class="menu-text">SMI to SRT</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- 메뉴 오버레이 -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- 외부 스크립트 -->
+    <script src="../script.js"></script>
+    <script src="smi2srt.js"></script>
+</body>
+
+</html>
