@@ -145,4 +145,55 @@ function closeMenu(slideMenu, overlay) {
     slideMenu.classList.remove('open');
     overlay.classList.remove('show');
     document.body.style.overflow = '';
-} 
+}
+
+// 슬라이드 메뉴 관련 기능
+document.addEventListener('DOMContentLoaded', function () {
+    console.log("메뉴 스크립트 초기화");
+
+    // 메뉴 관련 요소 참조
+    const menuButton = document.getElementById('menuButton');
+    const slideMenu = document.getElementById('slideMenu');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const closeMenu = document.getElementById('closeMenu');
+
+    // 요소 존재 확인 
+    if (!menuButton) {
+        console.error("메뉴 버튼을 찾을 수 없습니다!");
+        return;
+    }
+
+    if (!slideMenu) {
+        console.error("슬라이드 메뉴를 찾을 수 없습니다!");
+        return;
+    }
+
+    if (!menuOverlay) {
+        console.error("메뉴 오버레이를 찾을 수 없습니다!");
+        return;
+    }
+
+    // 메뉴 버튼 클릭 이벤트
+    menuButton.addEventListener('click', function () {
+        console.log("메뉴 버튼 클릭");
+        slideMenu.classList.add('open');
+        menuOverlay.classList.add('active');
+        document.body.classList.add('menu-open');
+    });
+
+    // 닫기 버튼 클릭 이벤트
+    if (closeMenu) {
+        closeMenu.addEventListener('click', function () {
+            slideMenu.classList.remove('open');
+            menuOverlay.classList.remove('active');
+            document.body.classList.remove('menu-open');
+        });
+    }
+
+    // 오버레이 클릭 이벤트 
+    menuOverlay.addEventListener('click', function () {
+        slideMenu.classList.remove('open');
+        menuOverlay.classList.remove('active');
+        document.body.classList.remove('menu-open');
+    });
+}); 
