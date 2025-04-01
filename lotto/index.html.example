@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../template/css.css">
     <link rel="stylesheet" href="lotto.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4676194774660653"
         crossorigin="anonymous"></script>
@@ -55,8 +55,8 @@
 
     <!-- 메인 컨텐츠 -->
     <main class="main-content" role="main">
+        <div class="message-area" id="messageArea" aria-live="polite">숫자는 6개까지 선택 가능합니다</div>
         <div class="lotto-container">
-            <div class="message-area" id="messageArea" aria-live="polite">숫자는 6개까지 선택 가능합니다</div>
             <section class="lotto-paper" aria-label="로또 번호 선택 영역">
                 <header class="paper-header">
                     <div class="game-id">Lotto</div>
@@ -82,7 +82,6 @@
             <div class="footer-content">
                 <p>&copy; <span id="currentYear">2024</span> exRef All rights reserved.</p>
             </div>
-            <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
         </footer>
     </main>
 
@@ -112,12 +111,11 @@
     <script src="../template/js.js"></script>
     <script src="../history_win.js"></script>
     <script src="lotto.js"></script>
-
+    
     <!-- 현재 페이지 ID 설정 -->
     <script>
         window.currentPageId = "lotto";
     </script>
-
 </body>
 
-</html>
+</html> 

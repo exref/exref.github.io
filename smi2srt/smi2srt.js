@@ -99,7 +99,7 @@ function convertSmiToSrt(smiContent, encoding) {
 
             // P 태그에서 텍스트 추출 (다양한 P 태그 형식 지원)
             let textContent = "";
-            const pTagRegex = /<P[^>]*>(.*?)<\/P>/gis;
+            const pTagRegex = /<P[^>]*Class=KRCC[^>]*>([\s\S]*?)(?=<\/P>|<SYNC|$)/gi;
             let pMatch;
             let hasContent = false;
 
@@ -112,6 +112,10 @@ function convertSmiToSrt(smiContent, encoding) {
                         let text = trimmedText.replace(/<br\s*\/?>/gi, '\n');
                         // 연속된 개행문자를 하나로 통합 (빈 줄 방지)
                         text = text.replace(/\n\s*\n/g, '\n');
+                        // font 태그 처리
+                        text = text.replace(/<font[^>]*>/gi, '').replace(/<\/font>/gi, '');
+                        // i 태그 처리
+                        text = text.replace(/<i>/gi, '').replace(/<\/i>/gi, '');
                         // 나머지 HTML 태그 제거
                         text = text.replace(/<[^>]*>/g, '').trim();
 
@@ -141,7 +145,7 @@ function convertSmiToSrt(smiContent, encoding) {
     if (matches.length === 0) {
         console.log("첫 번째 방식 실패, 두 번째 방식으로 재시도");
 
-        const alternativeRegex = /<SYNC\s+Start=(\d+)[^>]*>(?:[\s\n]*)<P[^>]*>(.*?)(?:<\/P>|<SYNC)/gis;
+        const alternativeRegex = /<SYNC\s+Start=(\d+)[^>]*>(?:[\s\n]*)<P[^>]*Class=KRCC[^>]*>([\s\S]*?)(?=<SYNC|$)/gi;
         let lastIndex = 0;
 
         while ((match = alternativeRegex.exec(smiContent)) !== null) {
@@ -154,6 +158,10 @@ function convertSmiToSrt(smiContent, encoding) {
             const startTime = parseInt(match[1]);
             // <br> 또는 <br/> 태그를 개행 문자로 변환
             let text = match[2].replace(/<br\s*\/?>/gi, '\n');
+            // font 태그 처리
+            text = text.replace(/<font[^>]*>/gi, '').replace(/<\/font>/gi, '');
+            // i 태그 처리
+            text = text.replace(/<i>/gi, '').replace(/<\/i>/gi, '');
             // 나머지 HTML 태그 제거
             text = text.replace(/<[^>]*>/g, '').trim();
 
@@ -323,30 +331,165 @@ function processFile(file) {
         showStatus(`${file.name} 파일 처리 중...`, "processing");
 
         // 더 많은 인코딩 옵션 지원하기 위해 TextDecoder 사용
-        const tryDecodingWithEncodings = (arrayBuffer, encodings) => {
+        const tryDecodingWithEncodings = (arrayBuffer) => {
             let content = '';
-            let decodingError = null;
             let usedEncoding = null;
 
-            // 지정된 인코딩으로 시도
-            for (const enc of encodings) {
+            // 한글 포함 여부 확인 함수
+            const hasKoreanText = (text) => {
+                const koreanRegex = /[\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318F\uA960-\uA97F\uD7B0-\uD7FF]/;
+                return koreanRegex.test(text);
+            };
+
+            // 콘텐츠 유효성 검사 함수
+            const isValidContent = (text) => {
+                if (!text || !text.trim()) {
+                    console.log("빈 내용 감지됨");
+                    return false;
+                }
+
+                // SAMI 또는 SYNC 태그 확인 (대소문자 구분 없이)
+                const hasSAMI = text.toLowerCase().includes('<sami') || text.includes('SAMI');
+                const hasSYNC = text.toLowerCase().includes('sync');
+
+                console.log("SAMI 태그 존재:", hasSAMI);
+                console.log("SYNC 태그 존재:", hasSYNC);
+
+                if (!hasSAMI && !hasSYNC) {
+                    return false;
+                }
+
+                // KRCC 클래스가 있는지 확인
+                const hasKRCC = text.includes('Class=KRCC');
+                console.log("KRCC 클래스 존재:", hasKRCC);
+
+                // 한글이 포함된 경우 추가 검증
+                if (hasKoreanText(text)) {
+                    // 한글 문자가 정상적으로 표시되는지 확인
+                    const koreanTextSample = text.match(/[\uAC00-\uD7AF가-힣]{2,}/g);
+                    if (koreanTextSample) {
+                        console.log("한글 텍스트 샘플:", koreanTextSample.slice(0, 3));
+                    }
+
+                    // 의심스러운 패턴 검사 (완화된 버전)
+                    const suspiciousPatterns = [
+                        /[?]{5,}/,                 // 5개 이상 연속된 물음표
+                        /[\u0080-\u00FF]{5,}/,     // 5개 이상 연속된 확장 ASCII 문자
+                    ];
+
+                    let suspiciousCount = 0;
+                    for (const pattern of suspiciousPatterns) {
+                        if (pattern.test(text)) {
+                            console.log("의심스러운 문자 패턴 발견:", pattern);
+                            suspiciousCount++;
+                        }
+                    }
+
+                    // 모든 패턴이 발견된 경우에만 실패
+                    if (suspiciousCount === suspiciousPatterns.length) {
+                        console.log("모든 의심스러운 패턴이 발견됨");
+                        return false;
+                    }
+
+                    // KRCC 클래스가 없으면 실패
+                    if (!hasKRCC) {
+                        console.log("한글 자막이 있지만 KRCC 클래스가 없음");
+                        return false;
+                    }
+
+                    // 최소한의 유효한 한글 문자가 있는지 확인
+                    if (!koreanTextSample || koreanTextSample.length === 0) {
+                        console.log("유효한 한글 문자열이 없음");
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                // 한글이 없는 경우는 SAMI/SYNC 태그와 KRCC 클래스가 모두 있어야 함
+                return hasKRCC;
+            };
+
+            // BOM 체크
+            const checkBOM = (buffer) => {
+                const bom = new Uint8Array(buffer.slice(0, 4));
+
+                // UTF-8 BOM
+                if (bom[0] === 0xEF && bom[1] === 0xBB && bom[2] === 0xBF) {
+                    console.log('UTF-8 BOM 감지됨');
+                    const newBuffer = buffer.slice(3);  // BOM 제거
+                    return { buffer: newBuffer, encoding: 'UTF-8' };
+                }
+                // UTF-16 LE BOM
+                if (bom[0] === 0xFF && bom[1] === 0xFE) {
+                    console.log('UTF-16 LE BOM 감지됨');
+                    const newBuffer = buffer.slice(2);  // BOM 제거
+                    return { buffer: newBuffer, encoding: 'UTF-16LE' };
+                }
+                // UTF-16 BE BOM
+                if (bom[0] === 0xFE && bom[1] === 0xFF) {
+                    console.log('UTF-16 BE BOM 감지됨');
+                    const newBuffer = buffer.slice(2);  // BOM 제거
+                    return { buffer: newBuffer, encoding: 'UTF-16BE' };
+                }
+                return { buffer, encoding: null };
+            };
+
+            // 시도할 인코딩 목록
+            const encodings = [
+                'UTF-8',
+                'EUC-KR',
+                'UTF-16LE',
+                'UTF-16BE'
+            ];
+
+            // BOM 체크 및 인코딩 감지
+            const { buffer: cleanBuffer, encoding: bomEncoding } = checkBOM(arrayBuffer);
+
+            // BOM으로 감지된 인코딩이 있으면 먼저 시도
+            if (bomEncoding) {
                 try {
-                    const decoder = new TextDecoder(enc);
-                    content = decoder.decode(arrayBuffer);
-                    console.log(`인코딩 성공: ${enc}`);
-                    usedEncoding = enc;
-                    return { content, usedEncoding };
+                    console.log(`BOM으로 감지된 ${bomEncoding} 인코딩으로 시도 중...`);
+                    const decoder = new TextDecoder(bomEncoding, { fatal: false });
+                    content = decoder.decode(cleanBuffer);
+
+                    if (isValidContent(content)) {
+                        console.log(`${bomEncoding} 인코딩으로 성공 (BOM)`);
+                        return { content, usedEncoding: bomEncoding };
+                    }
                 } catch (err) {
-                    decodingError = err;
-                    console.warn(`${enc} 인코딩으로 디코딩 실패:`, err);
+                    console.warn(`BOM 감지된 인코딩 실패:`, err.message);
                 }
             }
 
-            // 모든 시도 실패 시
-            if (decodingError) {
-                throw new Error("지원되는 인코딩으로 파일을 읽을 수 없습니다.");
+            // 다른 인코딩 시도
+            for (const enc of encodings) {
+                if (enc === bomEncoding) continue; // 이미 시도한 인코딩은 건너뛰기
+
+                try {
+                    console.log(`${enc} 인코딩으로 시도 중...`);
+                    const decoder = new TextDecoder(enc, { fatal: false });
+
+                    // 먼저 정제된 버퍼로 시도
+                    content = decoder.decode(cleanBuffer);
+                    console.log(`디코딩된 내용 길이:`, content.length);
+                    console.log(`한글 포함 여부:`, hasKoreanText(content));
+
+                    // 샘플 텍스트 출력
+                    const sample = content.substring(0, 500);
+                    console.log(`내용 샘플:`, sample);
+
+                    if (isValidContent(content)) {
+                        console.log(`${enc} 인코딩으로 성공`);
+                        const displayEncoding = enc === 'EUC-KR' ? 'CP949' : enc;
+                        return { content, usedEncoding: displayEncoding };
+                    }
+                } catch (err) {
+                    console.warn(`${enc} 인코딩으로 디코딩 실패:`, err.message);
+                }
             }
-            return { content: '', usedEncoding: null };
+
+            throw new Error("지원되는 인코딩으로 파일을 읽을 수 없습니다. (UTF-8, CP949 인코딩만 지원)");
         };
 
         // ArrayBuffer로 파일 읽기
@@ -354,37 +497,28 @@ function processFile(file) {
         fileReader.onload = function (e) {
             try {
                 const arrayBuffer = e.target.result;
-                let fileContent = '';
-                let detectedEncoding = '';
+                console.log("파일 크기:", arrayBuffer.byteLength, "바이트");
 
                 // SMI 파일 확장자 확인
                 if (!file.name.toLowerCase().endsWith('.smi')) {
                     throw new Error("SMI 파일만 지원됩니다.");
                 }
 
-                // 한국어 SMI 파일에 더 적합한 순서로 변경 (CP949, EUC-KR을 우선)
-                const decodeResult = tryDecodingWithEncodings(arrayBuffer, ['CP949', 'EUC-KR', 'UTF-8', 'windows-1252']);
-
-                fileContent = decodeResult.content;
-                detectedEncoding = decodeResult.usedEncoding;
-
-                // 디버깅을 위한 로그
-                console.log(`감지된 인코딩: ${detectedEncoding}`);
+                const decodeResult = tryDecodingWithEncodings(arrayBuffer);
+                console.log(`감지된 인코딩: ${decodeResult.usedEncoding}`);
 
                 // SMI를 SRT로 변환
                 console.log("SMI를 SRT로 변환 시작");
-                const srtContent = convertSmiToSrt(fileContent, detectedEncoding);
-                console.log("SMI를 SRT로 변환 완료 - 결과 길이:", srtContent.length);
+                const srtContent = convertSmiToSrt(decodeResult.content, decodeResult.usedEncoding);
 
-                // 변환된 SRT 파일 생성 - 인코딩 정보 없이 파일명 생성
-                const srtFileName = file.name.replace(/\.smi$/i, '.srt');
-
-                // 상태 메시지 업데이트
-                showStatus(`${file.name} 파일 변환 완료! (감지된 인코딩: ${detectedEncoding})`, "success");
+                // 변환된 내용이 비어있는지 확인
+                if (!srtContent || !srtContent.trim()) {
+                    throw new Error("변환된 자막이 없습니다.");
+                }
 
                 resolve({
                     content: srtContent,
-                    fileName: srtFileName
+                    fileName: file.name.replace(/\.smi$/i, '.srt')
                 });
             } catch (error) {
                 console.error("파일 처리 중 오류:", error);
@@ -411,32 +545,30 @@ function downloadFile(content, fileName) {
             throw new Error("생성된 파일 내용이 비어있습니다.");
         }
 
-        // UTF-8로 Blob 생성
-        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-        console.log("Blob 생성 완료:", blob.size, "바이트");
+        // UTF-8로 인코딩
+        const encoder = new TextEncoder();
+        const contentArray = encoder.encode(content);
+
+        // Blob 생성 (UTF-8)
+        const blob = new Blob([contentArray], { type: 'text/plain;charset=utf-8' });
 
         // 다운로드 링크 생성
         const url = URL.createObjectURL(blob);
-        console.log("Blob URL 생성:", url);
-
         const a = document.createElement('a');
         a.href = url;
         a.download = fileName;
         a.style.display = 'none';
         document.body.appendChild(a);
-        console.log("다운로드 링크 생성:", a);
 
         a.click();
-        console.log("다운로드 링크 클릭됨");
+        console.log("UTF-8로 다운로드 시작");
 
         // 정리
         setTimeout(() => {
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            console.log("다운로드 링크 정리 완료");
         }, 500);
 
-        console.log(`${fileName} 다운로드 시작됨 (UTF-8)`);
         return true;
     } catch (error) {
         console.error("파일 다운로드 중 오류:", error);
@@ -520,4 +652,4 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
-}); 
+});

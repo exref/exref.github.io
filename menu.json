@@ -1,0 +1,16 @@
+{
+    "menuItems": [
+        {
+            "id": "lotto",
+            "title": "로또번호생성기",
+            "url": "../lotto",
+            "icon": "casino"
+        },
+        {
+            "id": "smi2srt",
+            "title": "SMI to SRT",
+            "url": "../smi2srt",
+            "icon": "subtitles"
+        }
+    ]
+}

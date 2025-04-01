@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{DESCRIPTION}}">
+    <meta name="keywords" content="{{KEYWORDS}}">
+    <meta name="author" content="exRef">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="{{OG_TITLE}}">
+    <meta property="og:description" content="{{OG_DESCRIPTION}}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{OG_URL}}">
+    <meta property="og:image" content="{{OG_IMAGE}}">
+    <link rel="canonical" href="{{CANONICAL}}">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <title>{{TITLE}}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../template/css.css">
+    <!-- <link rel="stylesheet" href="{{PAGE_CSS}}"> -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4676194774660653" crossorigin="anonymous"></script> -->
+    <script type="application/ld+json">
+    {{JSON_LD}}
+    </script>
+</head>
+
+<body>
+    <!-- 메뉴바 -->
+    <header class="menu-bar">
+        <div class="menu-container">
+            <h1>{{PAGE_TITLE}}</h1>
+            <button class="menu-button" id="menuButton" aria-label="메뉴 열기">
+                <span class="material-icons">menu</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="main-content" role="main">
+        <div class="message-area" id="messageArea" aria-live="polite"></div>
+
+        {{CONTENT}}
+
+        <!-- 푸터 섹션 -->
+        <footer class="site-footer" role="contentinfo">
+            <div class="footer-content">
+                <p>&copy; <span id="currentYear">2024</span> exRef All rights reserved.</p>
+            </div>
+            <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
+        </footer>
+    </main>
+
+    <!-- 광고배너 -->
+    <div class="ad-banner">
+        <div class="ad-container">
+            <span></span>
+        </div>
+    </div>
+
+    <!-- 슬라이드 메뉴 -->
+    <nav class="slide-menu" id="slideMenu">
+        <div class="slide-menu-header">
+            <button class="close-menu" id="closeMenu" aria-label="메뉴 닫기">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        <div class="menu-items" id="dynamicMenuItems">
+            <!-- 메뉴 항목이 동적으로 삽입됩니다 -->
+        </div>
+    </nav>
+
+    <!-- 메뉴 오버레이 -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- 외부 스크립트 -->
+    <script src="../template/js.js"></script>
+    <!-- <script src="{{PAGE_JS}}"></script> -->
+
+    <!-- 현재 페이지 ID -->
+    <script>
+        // 이 값은 각 페이지에서 적절히 설정합니다
+        window.currentPageId = "{{CURRENT_PAGE_ID}}";
+    </script>
+</body>
+
+</html>

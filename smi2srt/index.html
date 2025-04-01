@@ -116,15 +116,8 @@
                 <span class="material-icons">close</span>
             </button>
         </div>
-        <div class="menu-items">
-            <a href="../lotto" class="menu-item">
-                <span class="material-icons menu-icon">casino</span>
-                <span class="menu-text">로또번호생성기</span>
-            </a>
-            <a href="../smi2srt" class="menu-item active">
-                <span class="material-icons menu-icon">subtitles</span>
-                <span class="menu-text">SMI to SRT</span>
-            </a>
+        <div class="menu-items" id="dynamicMenuItems">
+            <!-- 메뉴 항목이 동적으로 삽입됩니다 -->
         </div>
     </nav>
 
@@ -132,8 +125,13 @@
     <div class="menu-overlay" id="menuOverlay"></div>
 
     <!-- 외부 스크립트 -->
-    <script src="../common.js"></script>
+    <script src="../template/js.js"></script>
     <script src="smi2srt.js"></script>
+
+    <!-- 현재 페이지 ID 설정 -->
+    <script>
+        window.currentPageId = "smi2srt";
+    </script>
 </body>
 
 </html>
