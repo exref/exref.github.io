@@ -4,25 +4,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>miscBox</title>
-    <meta name="description" content="무료 로또번호 생성기와 smi2srt 자막 변환기를 제공합니다.">
-    <meta name="keywords" content="로또, 로또번호, 로또번호생성기, 로또번호추천, 로또당첨번호, 로또번호조합, 자막, SMI, SRT, 변환">
+    <title>miscBox - 생각날 때마다 만들어 두는 웹 도구 모음</title>
+    <meta name="description" content="무료 로또번호 생성기와 SMI to SRT 자막 변환기 등 다양한 웹 도구를 제공합니다.">
+    <meta name="keywords" content="로또, 로또번호, 로또번호생성기, 로또번호추천, 로또당첨번호, 로또번호조합, 자막, SMI, SRT, 변환, 웹도구, 유틸리티">
     <meta name="author" content="exRef">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="miscBox">
-    <meta property="og:description" content="무료 로또번호 생성기와 smi2srt 자막 변환기를 제공합니다.">
+    <meta property="og:title" content="miscBox - 유용한 웹 도구 모음">
+    <meta property="og:description" content="무료 로또번호 생성기와 SMI to SRT 자막 변환기 등 다양한 웹 도구를 제공합니다.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://exref.github.io/lotto/">
+    <meta property="og:url" content="https://exref.github.io/">
     <meta property="og:image" content="https://exref.github.io/img/social/lotto-og.jpg">
-    <link rel="canonical" href="https://exref.github.io/lotto/">
-    <link rel="icon" href="../favicon.ico" type="image/x-icon">
-    <script>
-        window.location.href = "/lotto/";
-    </script>
+    <link rel="canonical" href="https://exref.github.io/">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .service-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .service-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-title {
+            color: #1976d2;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .service-description {
+            color: #333;
+            line-height: 1.6;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .service-link {
+            display: inline-block;
+            background-color: #1976d2;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .service-link:hover {
+            background-color: #0d47a1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #1976d2;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 18px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
 </head>
 
 <body>
-    <p>리다이렉트 중입니다. 자동으로 이동하지 않으면 <a href="/lotto/">여기</a>를 클릭하세요.</p>
+    <div class="service-container">
+        <header class="header">
+            <h1>miscBox</h1>
+            <p>생각날 때마다 만들어 두는 웹 도구 모음</p>
+        </header>
+
+        <div class="service-card">
+            <h2 class="service-title">로또 번호 생성기</h2>
+            <p class="service-description">
+                무료로 사용할 수 있는 로또 번호 생성기입니다. 사용자가 원하는 번호를 선택하거나 자동으로 번호를 생성할 수 있습니다.
+                생성된 번호는 과거 당첨 번호와 비교하여 일치하는 회차를 확인할 수 있습니다.
+            </p>
+            <a href="/lotto/" class="service-link">로또 번호 생성하기</a>
+        </div>
+
+        <div class="service-card">
+            <h2 class="service-title">SMI to SRT 변환기</h2>
+            <p class="service-description">
+                .smi 자막 파일을 .srt 형식으로 변환하는 도구입니다. 다양한 인코딩(UTF-8, CP949, EUC-KR)을 지원하며,
+                변환된 .srt 파일은 UTF-8 인코딩으로 저장됩니다.
+            </p>
+            <a href="/smi2srt/" class="service-link">자막 변환하기</a>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; <span id="currentYear">2024</span> exRef All rights reserved.</p>
+            <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
+        </footer>
+    </div>
 </body>
 
 </html>
